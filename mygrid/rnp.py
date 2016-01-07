@@ -360,6 +360,8 @@ class Arvore(object):
         edges = list()
         self.g = gv.Graph(format='svg')
         self.g.graph_attr['rankdir'] = 'LR'
+        self.g.node_attr['penwidth'] = '2.0'
+        self.g.edge_attr['penwidth'] = '2.0'
 
         for i in nodes:
             self.g.node(i)
