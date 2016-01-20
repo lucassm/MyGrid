@@ -1,7 +1,8 @@
 #! coding: utf-8
 
 from mygrid.util import Fasor, Base
-
+from mygrid.rede import Chave
+from terminaltables import AsciiTable
 
 def config_objects(subestacao):
 
@@ -24,6 +25,8 @@ def config_objects(subestacao):
 
             trecho.fluxo = Fasor(real=0.0, imag=0.0, tipo=Fasor.Corrente)
 
+    calculaimpedanciaeq(subestacao)
+
 
 def calculacurto(subestacao, tipo):
 
@@ -33,7 +36,9 @@ def calculacurto(subestacao, tipo):
             for trecho in subestacao.alimentadores[alimentador_atual].trechos.values():
                 curto = _calcula_curto_trifasico(trecho)
                 curto_trifasico.append([trecho.nome,str(curto.pu),str(curto.mod)])
-        return curto_trifasico
+        
+        table = AsciiTable(curto_trifasico)
+        print table.table
 
     elif tipo == 'monofasico':
         curto_monofasico = [['Trecho 1fasico', 'Curto pu', 'Curto A']]
@@ -41,7 +46,9 @@ def calculacurto(subestacao, tipo):
             for trecho in subestacao.alimentadores[alimentador_atual].trechos.values():
                 curto = _calcula_curto_monofasico(trecho)
                 curto_monofasico.append([trecho.nome,str(curto.pu),str(curto.mod)])
-        return curto_monofasico
+        
+        table = AsciiTable(curto_monofasico)
+        print table.table
 
     elif tipo == 'bifasico':
         curto_bifasico = [['Trecho 2fasico', 'Curto pu', 'Curto A']]
@@ -49,7 +56,9 @@ def calculacurto(subestacao, tipo):
             for trecho in subestacao.alimentadores[alimentador_atual].trechos.values():
                 curto = _calcula_curto_bifasico(trecho)
                 curto_bifasico.append([trecho.nome,str(curto.pu),str(curto.mod)])
-        return curto_bifasico
+        
+        table = AsciiTable(curto_bifasico)
+        print table.table
 
     elif tipo == 'monofasico_minimo':
         curto_monofasico_minimo = [['Trecho 1fasico min', 'Curto pu', 'Curto A']]
@@ -57,7 +66,9 @@ def calculacurto(subestacao, tipo):
             for trecho in subestacao.alimentadores[alimentador_atual].trechos.values():
                 curto = _calcula_curto_monofasico_minimo(trecho)
                 curto_monofasico_minimo.append([trecho.nome,str(curto.pu),str(curto.mod)])
-        return curto_monofasico_minimo
+        
+        table = AsciiTable(curto_monofasico_minimo)
+        print table.table
 
 def calculaimpedanciaeq(subestacao):
 
@@ -72,7 +83,7 @@ def calculaimpedanciaeq(subestacao):
             break
         break
 
-    _calculaimpedanciaeq(trechoatual, alimentador_atual, trechosvisitados)
+    _calculaimpedanciaeq(subestacao, trechoatual, prox_no, alimentador_atual, trechosvisitados)
 
 
 def _calculaimpedanciaeq(subestacao, trecho_anterior, no_atual, alimentador_atual, trechosvisitados):
@@ -98,7 +109,7 @@ def _calculaimpedanciaeq(subestacao, trecho_anterior, no_atual, alimentador_atua
             else:
                 prox_no = i.n1
 
-            _calculaimpedanciaeq(trecho_atual, prox_no, alimentador_atual, trechosvisitados)
+            _calculaimpedanciaeq(subestacao, trecho_atual, prox_no, alimentador_atual, trechosvisitados)
         else:
             pass
     return

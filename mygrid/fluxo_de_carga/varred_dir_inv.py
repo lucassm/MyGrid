@@ -16,7 +16,7 @@ def calcular_fluxo_de_carga(subestacao):
         _atribuir_tensao_a_subestacao(subestacao, f1)
 
         for alimentador in subestacao.alimentadores.values():
-            max_iteracaoes = 50
+            max_iteracaoes = 100
             criterio_converg = 0.001
             converg = 1e6
             iter = 0
@@ -212,8 +212,8 @@ def _varrer_alimentador(alimentador):
                     # se o trecho não for uma instancia da classe
                     # Trecho(quando há chave entre nós de cargas)
                     # a impedância é calculada
+                    
                     if not isinstance(trecho, Trecho):
-
                         r1, x1 = trecho[0].calcula_impedancia()
                         r2, x2 = trecho[1].calcula_impedancia()
                         r, x = r1 + r2, x1 + x2

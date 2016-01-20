@@ -106,10 +106,13 @@ class Barramento(NoDeCarga):
                                          tensao=Fasor(real=0.0, imag=0.0, tipo=Fasor.Tensao),
                                          chaves=None)
 
-
-
 class Subestacao(object):
-    def __init__(self, nome, alimentadores, transformadores):
+    def __init__(self, 
+                 nome,
+                 alimentadores,
+                 transformadores,
+                 impedancia_equivalente_positiva=0.0+0.0j,
+                 impedancia_equivalente_zero=0.0+0.0j):
         assert isinstance(nome, str), 'O parâmetro nome da classe Subestacao ' \
                                       'deve ser do tipo str'
         assert isinstance(alimentadores, list), 'O parâmetro alimentadores da classe ' \
@@ -127,6 +130,10 @@ class Subestacao(object):
         for transformador in transformadores:
             self.transformadores[transformador.nome] = transformador
 
+        self.impedancia_equivalente_positiva = impedancia_equivalente_positiva
+        self.impedancia_equivalente_zero = impedancia_equivalente_zero
+        self.impedancia_positiva = impedancia_equivalente_positiva
+        self.impedancia_zero = impedancia_equivalente_zero
 
 class Trecho(Aresta):
     def __init__(self,
@@ -153,8 +160,8 @@ class Trecho(Aresta):
         self.comprimento = comprimento
 
     def calcula_impedancia(self):
-        return (self.comprimento * self.condutor.rp,
-                self.comprimento * self.condutor.xp)
+        return (self.comprimento * self.condutor.rp * 1e-3,
+                self.comprimento * self.condutor.xp * 1e-3)
 
     def __repr__(self):
         return 'Trecho: %s' % self.nome
