@@ -71,6 +71,7 @@ class Arvore(object):
         self.arvore = arvore
         self.raiz = None
         self._arvore = None
+        self.arestas_reservas = list()
 
     def ordenar(self, raiz):
         """
@@ -131,6 +132,9 @@ class Arvore(object):
                 else:
                     self.rnp = concatenate((self.rnp, [[len(pilha)], [i]]), axis=1)
                 break
+            else:
+                if i != pilha[len(pilha)-2] and i in pilha:
+                    self.arestas_reservas.append((no, i))
         else:
             pilha.pop()
             if pilha:
@@ -391,19 +395,19 @@ class Floresta(object):
 
 if __name__ == '__main__':
     # arvore 1
-    nos1 = {3: [1],
-            1: [3, 2, 7],
-            7: [1, 8, 9, 4, 10],
-            10: [7],
-            4: [7, 5, 6],
-            5: [4],
-            6: [4],
-            9: [7],
-            8: [7],
-            2: [1, 11, 12, 13],
-            11: [2],
-            12: [2, 13],
-            13: [12]}
+    nos1 = {'3': ['1'],
+            '1': ['3', '2', '7'],
+            '7': ['1', '8', '9', '4', '10'],
+            '10': ['7', '5'],
+            '4': ['7', '5', '6'],
+            '5': ['4', '10'],
+            '6': ['4'],
+            '9': ['7'],
+            '8': ['7'],
+            '2': ['1', '11', '12', '13'],
+            '11': ['2'],
+            '12': ['2', '13'],
+            '13': ['12', '2']}
 
     # arvore 2
     nos2 = {14: [15],
@@ -414,10 +418,10 @@ if __name__ == '__main__':
             19: [15]}
 
     # definição da arvore a1
-    arv_1 = Arvore(nos1)
+    arv_1 = Arvore(nos1, dtype=str)
 
     # ordenação da arvore a1
-    arv_1.ordenar(raiz=3)
+    arv_1.ordenar(raiz='3')
     print 'Representação RNP da arvore 1'
     print arv_1.rnp
 
@@ -431,18 +435,18 @@ if __name__ == '__main__':
     print arv_2.rnp
 
     # operação de poda
-    poda = arv_1.podar(7, alterar_rnp=True)
-    print 'Ramo Podado da arvore 1'
-    print poda
+    #poda = arv_1.podar(7, alterar_rnp=True)
+    #print 'Ramo Podado da arvore 1'
+    #print poda
 
-    print 'Representação RNP da arvore 1 depois da poda'
-    print arv_1.rnp
+    #print 'Representação RNP da arvore 1 depois da poda'
+    #print arv_1.rnp
 
     # print arv_1.caminho_no_para_raiz(no=12, sentido=1)
     # print arv_1.caminho_no_para_no(n1=13, n2=2, sentido=1)
 
     # operação de inserção
-    arv_2.inserir_ramo(19, poda, 7)
+    #arv_2.inserir_ramo(19, poda, 7)
 
-    print 'Representação RNP da arvore 2 depois da inserção do ramo podado da arvore 1'
-    print arv_2.rnp
+    #print 'Representação RNP da arvore 2 depois da inserção do ramo podado da arvore 1'
+    #print arv_2.rnp
