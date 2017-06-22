@@ -512,6 +512,54 @@ class Alimentador(Arvore):
         # atualiza a arvore de nos de carga do alimentador
         self.gerar_arvore_nos_de_carga()
 
+    def verifica_chave(self, n1, n2):
+        c = self.arvore_nos_de_carga.caminho_no_para_no(n1, n2)
+        if np.shape(c)[1] != 2:
+            raise AttributeError('Os nos n1 e n2 nao sao consecutivos!')
+        else:
+            trs = list()
+            # seleciona os trechos que tem algum dos nos nos extremos
+            for trecho in self.trechos.values():
+                if trecho.n1.nome == n1 or trecho.n2.nome == n1:
+                    trs.append(trecho)
+                elif trecho.n1.nome == n2 or trecho.n2.nome == n2:
+                    trs.append(trecho)
+
+            # percorre os trechos selecionados
+            for trecho in trs:
+                chaves = list()
+                # se for uma chave nos extremos seleciona
+                if type(trecho.n1) == Chave:
+                    # verifica se existe outro trecho 
+                    # com a mesma chave nos extremos
+                    for tr in trs:
+                        if (tr.n1 == trecho.n1 or tr.n2 == trecho.n1)\
+                           and tr is not trecho:
+                           return trecho.n1
+                # se for uma chave nos extremos seleciona
+                elif type(trecho.n2) == Chave:
+                    # verifica se existe outro trecho 
+                    # com a mesma chave nos extremos
+                    for tr in trs:
+                        if (tr.n1 == trecho.n2 or tr.n2 == trecho.n2)\
+                           and tr is not trecho:
+                           return trecho.n2
+            # se nao encontrar chave, retorna None
+            return None
+
+    def retorna_trecho(self, n1, n2):
+
+        trs = list()
+        for trecho in self.trechos.values():
+            if trecho.n1.nome == n1 or trecho.n2.nome == n1:
+                trs.append(trecho)
+        for tr in trs:
+            if tr.n1.nome == n2 or tr.n2.nome == n2:
+                return tr
+        return None
+
+            
+
 
 class Chave(Aresta):
     def __init__(self, nome, estado=1):
